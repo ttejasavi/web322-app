@@ -8,22 +8,57 @@
 *  Online (Cyclic) Link: ________________________________________________________
 *
 ********************************************************************************/ 
-var express = require("express");
-var app = express();
+const express = require('express');
+const app = express();
+const storeService = require('./store-service');
 
-var HTTP_PORT = process.env.PORT || 8080;
+app.use(express.static('public'));
 
-// call this function after the http server starts listening for requests
-function onHttpStart() {
-  console.log("Express http server listening on: " + HTTP_PORT);
-}
-app.get("/", function(req,res){
-  res.sendFile(path.join(__dirname,"/views/about.html"));
+app.get('/', (req, res) => {
+  res.redirect('/about');
 });
 
-app.get("/about", function(req,res){
-    res.sendFile(path.join(__dirname,"/views/about.html"));
-  });
+app.get('/about', (req, res) => {
+  res.sendFile(__dirname + '/views/about.html');
+});
 
-  app.listen(HTTP_PORT, onHttpStart);
+app.get('/shop', (req, res) => {
+  storeService.getPublishedItems()
+    .then((items) => {
+      res.json(items);
+    })
+    .catch((err) => {
+      res.json({ message: err });
+    });
+});
+
+app.get('/items', (req, res) => {
+  storeService.getAllItems()
+    .then((items) => {
+      res.json(items);
+    })
+    .catch((err) => {
+      res.json({ message: err });
+    });
+});
+
+app.get('/categories', (req, res) => {
+  storeService.getCategories()
+    .then((categories) => {
+      res.json(categories);
+    })
+    .catch((err) => {
+      res.json({ message: err });
+    });
+});
+
+app.use((req, res) => {
+  res.status(404).send('Page Not Found');
+});
+
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Express http server listening on port ${PORT}`);
+});
+
 

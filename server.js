@@ -8,63 +8,37 @@
 *  Online (Cyclic) Link: ________________________________________________________
 *
 ********************************************************************************/ 
-const express = require('express');
-const app = express();
-const storeService = require('./store-service');
+var express = require("express");
+const path = require ("path");
+const data = require("./store-service");
+var app = express();
 
-// Serve static files from the public folder
-app.use(express.static('public'));
+var HTTP_PORT = process.env.PORT || 8080;
+// call this function after the http server starts listening for requests
+function onHTTPSTART() {
+    console.log("Express http server listening on: " + HTTP_PORT);
+  }
 
-// Redirect root to the about page
-app.get('/', (req, res) => {
-  res.redirect('/about');
-});
+app.get("/", function(req,res){
+    res.sendFile(path.join(__dirname,"/views/about.html"));
+  });
+  
+  app.get("/about", function(req,res){
+    res.sendFile(path.join(__dirname,"/views/about.html"));
+  });
+  
+  app.get("/items",(req,res)=>{
+         store.getAllItems().then((data)=>{
+          res.json(data);
+         })
+  })
+  app.use((req,res)=>{
+    res.status(404).send("Page does not exist, coming soon!!!");
 
-// Serve the about.html page
-app.get('/about', (req, res) => {
-  res.sendFile(__dirname + '/views/about.html');
-});
-
-// Return all published items
-app.get('/shop', (req, res) => {
-  storeService.getPublishedItems()
-    .then((data) => {
-      res.json(data);
-    })
-    .catch((err) => {
-      res.status(500).json({ message: err });
-    });
-});
-
-// Return all items
-app.get('/items', (req, res) => {
-  storeService.getAllItems()
-    .then((data) => {
-      res.json(data);
-    })
-    .catch((err) => {
-      res.status(500).json({ message: err });
-    });
-});
-
-// Return all categories
-app.get('/categories', (req, res) => {
-  storeService.getCategories()
-    .then((data) => {
-      res.json(data);
-    })
-    .catch((err) => {
-      res.status(500).json({ message: err });
-    });
-});
-
-// Handle 404 - Page Not Found
-app.use((req, res) => {
-  res.status(404).send('Page Not Found');
-});
-
-// Start the server
-const port = process.env.PORT || 8080;
-app.listen(port, () => {
-  console.log(`Express http server listening on port ${port}`);
-});
+  });
+ // app.listen(HTTP_PORT, onHTTPSTART);
+ data.initialize().then(function(){
+  app.listen(HTTP_PORT, onHTTPSTART);
+ }).catch(function(err){
+  console.log("Unable to start server:"   + err);
+ })

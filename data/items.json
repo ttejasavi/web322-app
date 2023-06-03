@@ -6,7 +6,7 @@
        "featureImage":"https://dummyimage.com/200x200/000/fff",
        "price":9.99,
        "title":"Lawnmower",
-       "body":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras convallis fringilla sem efficitur congue. Vestibulum efficitur blandit ultricies. Sed tempus mollis orci id facilisis. Aliquam placerat, ipsum eget egestas malesuada, neque nunc scelerisque felis, ut egestas turpis augue ut nisi. Curabitur vel convallis augue.",
+       "body":"Good for this summers to trim your grasses. Discounts available for prime members.",
        "published":true
     },
     {
@@ -16,7 +16,7 @@
        "featureImage":"https://dummyimage.com/200x200/000/fff",
        "price":19.99,
        "title":"Weber BBQ",
-       "body":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras convallis fringilla sem efficitur congue. Vestibulum efficitur blandit ultricies. Sed tempus mollis orci id facilisis. Aliquam placerat, ipsum eget egestas malesuada, neque nunc scelerisque felis, ut egestas turpis augue ut nisi. Curabitur vel convallis augue.",
+       "body":"Get yourself some homemade BBQ with an experience of Weber BBQ at the comfort of your home.",
        "published":true
     },
     {
@@ -26,7 +26,7 @@
        "featureImage":"https://dummyimage.com/200x200/000/fff",
        "price":439.99,
        "title":"PS5",
-       "body":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras convallis fringilla sem efficitur congue. Vestibulum efficitur blandit ultricies. Sed tempus mollis orci id facilisis. Aliquam placerat, ipsum eget egestas malesuada, neque nunc scelerisque felis, ut egestas turpis augue ut nisi. Curabitur vel convallis augue.",
+       "body":"With an exclusive offer this weekend, Here is the new set of play station 5.",
        "published":true
     },
     {
@@ -36,7 +36,7 @@
        "featureImage":"https://dummyimage.com/200x200/000/fff",
        "price":459.99,
        "title":"XBOX",
-       "body":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras convallis fringilla sem efficitur congue. Vestibulum efficitur blandit ultricies. Sed tempus mollis orci id facilisis. Aliquam placerat, ipsum eget egestas malesuada, neque nunc scelerisque felis, ut egestas turpis augue ut nisi. Curabitur vel convallis augue.",
+       "body":"Grab your own XBOX at an offer of 15% discount on first arrival",
        "published":true
     },
     {
@@ -46,7 +46,7 @@
        "featureImage":"https://dummyimage.com/200x200/000/fff",
        "price":39.99,
        "title":"TShirt",
-       "body":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras convallis fringilla sem efficitur congue. Vestibulum efficitur blandit ultricies. Sed tempus mollis orci id facilisis. Aliquam placerat, ipsum eget egestas malesuada, neque nunc scelerisque felis, ut egestas turpis augue ut nisi. Curabitur vel convallis augue.",
+       "body":"Biggest offer for this summers, with a set of three cotton Tshirts at just 39.99 ",
        "published":true
     },
     {
@@ -56,7 +56,7 @@
        "featureImage":"https://dummyimage.com/200x200/000/fff",
        "price":29.99,
        "title":"Shorts",
-       "body":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras convallis fringilla sem efficitur congue. Vestibulum efficitur blandit ultricies. Sed tempus mollis orci id facilisis. Aliquam placerat, ipsum eget egestas malesuada, neque nunc scelerisque felis, ut egestas turpis augue ut nisi. Curabitur vel convallis augue.",
+       "body":"Flexible and comforting shorts for the customers to escape this scorching heat",
        "published":true
     },
     {
@@ -66,7 +66,7 @@
        "featureImage":"https://dummyimage.com/200x200/000/fff",
        "price":19.99,
        "title":"Baseball",
-       "body":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras convallis fringilla sem efficitur congue. Vestibulum efficitur blandit ultricies. Sed tempus mollis orci id facilisis. Aliquam placerat, ipsum eget egestas malesuada, neque nunc scelerisque felis, ut egestas turpis augue ut nisi. Curabitur vel convallis augue.",
+       "body":"Lets step out of houses and play baseball....",
        "published":true
     },
     {

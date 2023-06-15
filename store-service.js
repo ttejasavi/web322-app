@@ -44,3 +44,17 @@ module.exports.getPublishedItems = function(){
     }
   })
 }
+function processItem(imageUrl) {
+  req.body.featureImage = imageUrl;
+
+  storeService.addItem(req.body)
+    .then((newItem) => {
+      // Redirect the user to the /items route or send an appropriate response
+      res.redirect('/items');
+    })
+    .catch((error) => {
+      console.error(error);
+      // Handle the error appropriately
+      res.status(500).send('Error adding the item.');
+    });
+}

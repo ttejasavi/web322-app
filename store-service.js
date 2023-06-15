@@ -44,6 +44,24 @@ module.exports.getPublishedItems = function(){
     }
   })
 }
+function addItem(itemData) {
+  return new Promise((resolve, reject) => {
+    if (itemData.published === undefined) {
+      itemData.published = false;
+    } else {
+      itemData.published = true;
+    }
+
+    itemData.id = items.length + 1;
+    items.push(itemData);
+
+    resolve(itemData);
+  });
+}
+module.exports = addItem;
+
+
+
 function processItem(imageUrl) {
   req.body.featureImage = imageUrl;
 
@@ -58,3 +76,34 @@ function processItem(imageUrl) {
       res.status(500).send('Error adding the item.');
     });
 }
+function getItemsByCategory(category) {
+  return new Promise((resolve, reject) => {
+    const filteredItems = items.filter(item => item.category === category);
+    if (filteredItems.length === 0) {
+      reject('No results returned');
+    } else {
+      resolve(filteredItems);
+    }
+  });
+}
+function getItemsByMinDate(minDateStr) {
+  return new Promise((resolve, reject) => {
+    const filteredItems = items.filter(item => new Date(item.postDate) >= new Date(minDateStr));
+    if (filteredItems.length === 0) {
+      reject('No results returned');
+    } else {
+      resolve(filteredItems);
+    }
+  });
+}
+function getItemById(id) {
+  return new Promise((resolve, reject) => {
+    const item = items.find(item => item.id === id);
+    if (item) {
+      resolve(item);
+    } else {
+      reject('No result returned');
+    }
+  });
+}
+

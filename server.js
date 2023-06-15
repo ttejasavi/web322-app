@@ -3,7 +3,7 @@
 *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source 
 *  (including 3rd party web sites) or distributed to other students.
 * 
-*  Name: __Tejasavi____________________ Student ID: _____174401216_________ Date: _May 29,2023______________
+*  Name: __Tejasavi____________________ Student ID: _____174401216_________ Date: _June 10,2023______________
 *
 *  Online (Cyclic) Link: ________________________________________________________
 *
@@ -93,32 +93,47 @@ app.get("/", function(req,res){
   } else {
     processItem("");
   }
+  function addItem(itemData) {
+    return new Promise((resolve, reject) => {
+      if (itemData.published === undefined) {
+        itemData.published = false;
+      } else {
+        itemData.published = true;
+      }
+  
+      itemData.id = items.length + 1;
+      items.push(itemData);
+  
+      resolve(itemData);
+    });
+  }
+  
+app.get('/items', (req, res) => {
+  const category = req.query.category;
+  const minDate = req.query.minDate;
 
-  function processItem(imageUrl) {
-    req.body.featureImage = imageUrl;
-
-    // TODO: Process the req.body and add it as a new Item before redirecting to /items
-    
+  if (category) {
+    // Filter items by category
+    const itemsByCategory = getItemsByCategory(category);
+    res.json(itemsByCategory);
+  } else if (minDate) {
+    // Filter items by minimum date
+    const itemsByMinDate = getItemsByMinDate(minDate);
+    res.json(itemsByMinDate);
+  } else {
+    // Return all items without any filter
+    res.json(getAllItems());
   }
 });
-function addItem(itemData) {
-  return new Promise((resolve, reject) => {
-    if (itemData.published === undefined) {
-      itemData.published = false;
-    } else {
-      itemData.published = true;
-    }
+app.get('/item/:id', (req, res) => {
+  const itemId = req.params.id;
+  const item = getItemById(itemId);
 
-    itemData.id = items.length + 1;
-    items.push(itemData);
+  if (item) {
+    res.json(item);
+  } else {
+    res.status(404).json({ error: 'Item not found' });
+  }
+});
 
-    resolve(itemData);
-  });
-}
-
-module.exports = {
-  // Other functions in store-service.js
-
-  addItem
-};
 

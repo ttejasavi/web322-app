@@ -35,7 +35,7 @@ app.get("/", function(req,res){
   });
   
   app.get("/about", function(req,res){
-    res.sendFile(path.join(__dirname,"/views/about.html"));
+    res.render(path.join(__dirname,"/views/about.html"));
   });
   
   
@@ -50,9 +50,9 @@ app.get("/", function(req,res){
   });
 
   app.get("/items/add", function(req,res){
-    res.sendFile(path.join(__dirname,"/views/addItem.html"));
+    res.render(path.join(__dirname,"/views/addItem.html"));
     })
-})
+
  // app.listen(HTTP_PORT, onHTTPSTART);
  data.initialize().then(function(){
   app.listen(HTTP_PORT, onHTTPSTART);
@@ -139,5 +139,4 @@ app.get('/item/:id', (req, res) => {
     res.status(404).json({ error: 'Item not found' });
   }
 });
-
-
+ })

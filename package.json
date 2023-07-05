@@ -1,4 +1,4 @@
-{
+{ 
   "name": "web322-app",
   "version": "1.0.0",
   "main": "server.js",
@@ -23,5 +23,9 @@
     "url": "https://github.com/ttejasavi/web322-app/issues"
   },
   "homepage": "https://github.com/ttejasavi/web322-app#readme",
-  "description": ""
+  "description": "c",
+  "keywords": [
+    "^C"
+  ]
+
 }

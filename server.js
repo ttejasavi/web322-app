@@ -1,9 +1,9 @@
 /*********************************************************************************
-*  WEB322 – Assignment 03
+*  WEB322 – Assignment 04
 *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source 
 *  (including 3rd party web sites) or distributed to other students.
 * 
-*  Name: __Tejasavi____________________ Student ID: _____174401216_________ Date: _June 10,2023______________
+*  Name: __Tejasavi____________________ Student ID: _____174401216_________ Date: _July 01,2023______________
 *
 *  Online (Cyclic) Link: _https://jade-breakable-viper.cyclic.app/_______________________________________________________
 *
@@ -19,25 +19,39 @@ const exphbs = require('express-handlebars');
 
 
 var app = express();
-
 var HTTP_PORT = process.env.PORT || 8080;
+
+const app = express();
+const HTTP_PORT = process.env.PORT || 8080;
+
 // call this function after the http server starts listening for requests
 app.use(express.static('public'));
 function onHTTPSTART() {
     console.log("Express http server listening on: " + HTTP_PORT);
   }
+  app.use(function(req,res,next){
+    let route = req.path.substring(1);
+    app.locals.activeRoute = "/" + (isNaN(route.split('/')[1]) ? route.replace(/\/(?!.*)/, "") : route.replace(/\/(.*)/, ""));
+    app.locals.viewingCategory = req.query.category;
+    next();
+});
+
+
+app.get("/", (req, res) => {
+  res.render('about');
+});
 
 app.engine('hbs', exphbs.engine({ extname: '.hbs' }));
 app.set('view engine', 'hbs');
-  
-app.get("/", function(req,res){
-    res.sendFile(path.join(__dirname,"/views/about.html"));
-  });
-  
-  app.get("/about", function(req,res){
-    res.render(path.join(__dirname,"/views/about.html"));
-  });
-  
+
+app.use(express.static('public'));
+
+app.get("/", (req, res) => {
+  res.render('about');
+});
+app.get("/about", (req,res) =>{
+  res.redirect('about');
+});
   
   app.get("/items",(req,res)=>{
          store.getAllItems().then((data)=>{
@@ -49,9 +63,17 @@ app.get("/", function(req,res){
 
   });
 
-  app.get("/items/add", function(req,res){
-    res.render(path.join(__dirname,"/views/addItem.html"));
-    })
+  app.get("/items/add", (req,res)=>{
+    res.render('addItem');
+    });
+    app.post('/items/add', upload.single('featureImage'), (req, res)=>{
+
+    });
+    
+    app.listen(HTTP_PORT, () => {
+      console.log("Express http sever listening on: " + HTTP_PORT);
+
+    });
 
  // app.listen(HTTP_PORT, onHTTPSTART);
  data.initialize().then(function(){
@@ -134,9 +156,71 @@ app.get('/item/:id', (req, res) => {
   const item = getItemById(itemId);
 
   if (item) {
-    res.json(item);
+    res.render(item);
   } else {
-    res.status(404).json({ error: 'Item not found' });
+    res.status(404).render({ error: 'Item not found' });
   }
 });
  })
+ const exphbs = require('express-handlebars');
+const hbs = exphbs.create({});
+
+hbs.handlebars.registerHelper('navLink', function(url, options) {
+    const activeRoute = options.data.root.activeRoute;
+    const isActive = (activeRoute === url) ? 'active' : '';
+    hbs.handlebars.registerHelper('equals', function(lvalue, rvalue, options) {
+      if (arguments.length < 3)
+          throw new Error("Handlebars Helper equal needs 2 parameters");
+      if (lvalue != rvalue) {
+          return options.inverse(this);
+      } else {
+          return options.fn(this);
+      }
+  });
+
+  app.engine('hbs', hbs.engine);
+app.set('view engine', 'hbs');
+})
+app.get("/shop", async (req, res) => {
+  // Declare an object to store properties for the view
+  let viewData = {};
+
+  try {
+    // declare empty array to hold "post" objects
+    let items = [];
+
+    // if there's a "category" query, filter the returned posts by category
+    if (req.query.category) {
+      // Obtain the published "posts" by category
+      items = await itemData.getPublishedItemsByCategory(req.query.category);
+    } else {
+      // Obtain the published "items"
+      items = await itemData.getPublishedItems();
+    }
+
+    // sort the published items by postDate
+    items.sort((a, b) => new Date(b.postDate) - new Date(a.postDate));
+
+    // get the latest post from the front of the list (element 0)
+    let post = items[0];
+
+    // store the "items" and "post" data in the viewData object (to be passed to the view)
+    viewData.items = items;
+    viewData.item = item;
+  } catch (err) {
+    viewData.message = "no results";
+  }
+
+  try {
+    // Obtain the full list of "categories"
+    let categories = await itemData.getCategories();
+
+    // store the "categories" data in the viewData object (to be passed to the view)
+    viewData.categories = categories;
+  } catch (err) {
+    viewData.categoriesMessage = "no results";
+  }
+
+  // render the "shop" view with all of the data (viewData)
+  res.render("shop", { data: viewData });
+});

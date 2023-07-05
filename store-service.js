@@ -106,4 +106,10 @@ function getItemById(id) {
     }
   });
 }
+function getPublishedItemsByCategory(category) {
+  return new Promise((resolve, reject) => {
+    const filteredItems = items.filter(item => item.published && item.category === category);
+    resolve(filteredItems);
+  });
+}
 

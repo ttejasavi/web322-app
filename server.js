@@ -15,6 +15,7 @@ const cloudinary = require('./config');
 const multer = require('multer');
 const upload = multer();
 const streamifier = require('streamifier');
+const exphbs = require('express-handlebars');
 
 
 var app = express();
@@ -26,6 +27,9 @@ function onHTTPSTART() {
     console.log("Express http server listening on: " + HTTP_PORT);
   }
 
+app.engine('hbs', exphbs.engine({ extname: '.hbs' }));
+app.set('view engine', 'hbs');
+  
 app.get("/", function(req,res){
     res.sendFile(path.join(__dirname,"/views/about.html"));
   });

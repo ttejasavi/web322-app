@@ -2,20 +2,7 @@ const fs = require("fs");
 let items = [];
 let categories = [];
 
-module.exports.intialize = function(){
-    return new Promise((resolve,reject)=>{
-        fs.readFile('./data/items.json',(err, itemsData)=>{
-            if (err){
-                reject(err);
-            }else{
-                items = JSON.parse(data);
-                resolve();
-            }
 
-        })
-    })
-
-}
 
 module.exports.getAllItems = function(){
     return new Promise((resolve, reject)=>{
@@ -44,20 +31,11 @@ module.exports.getPublishedItems = function(){
     }
   })
 }
-function addItem(itemData) {
-  return new Promise((resolve, reject) => {
-    if (itemData.published === undefined) {
-      itemData.published = false;
-    } else {
-      itemData.published = true;
-    }
-
-    itemData.id = items.length + 1;
-    items.push(itemData);
-
-    resolve(itemData);
-  });
+function addItem(item) {
+  const newItem = { ...item, postDate: new Date().toISOString().slice(0, 10) };
+  items.push(newItem);
 }
+
 module.exports = addItem;
 
 
@@ -108,8 +86,14 @@ function getItemById(id) {
 }
 function getPublishedItemsByCategory(category) {
   return new Promise((resolve, reject) => {
-    const filteredItems = items.filter(item => item.published && item.category === category);
-    resolve(filteredItems);
+    setTimeout(() => {
+      try {
+        const filteredItems = items.filter((item) => item.published && item.category === category);
+        resolve(filteredItems);
+      } catch (error) {
+        reject(error);
+      }
+    }, 1000);
   });
 }
 

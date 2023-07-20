@@ -1,9 +1,9 @@
 /*********************************************************************************
-*  WEB322 – Assignment 04
+*  WEB322 – Assignment 05
 *  I declare that this assignment is my own work in accordance with Seneca  Academic Policy.  No part *  of this assignment has been copied manually or electronically from any other source 
 *  (including 3rd party web sites) or distributed to other students.
 * 
-*  Name: __Tejasavi____________________ Student ID: _____174401216_________ Date: _July 03,2023______________
+*  Name: __Tejasavi____________________ Student ID: _____174401216_________ Date: _July 15,2023______________
 *
 *  Online (Cyclic) Link: _https://jade-breakable-viper.cyclic.app/_______________________________________________________
 *
@@ -20,7 +20,7 @@ const handlebarsHelpers = require('./handlebars-helpers');
 const itemData = require("./store-service");
 
 var app = express();
-//jhdvewjyfvewkjfbk
+
 var HTTP_PORT = process.env.PORT || 8080;
 // call this function after the http server starts listening for requests
 // Set up view engine
@@ -47,24 +47,49 @@ function onHTTPSTART() {
   
   
   app.get('/items', function(req, res) {
-    // Assuming you have a "getItems" function that returns a promise
-    getItems()
-      .then(function(data) {
-        res.render('items', { items: data });
+    storeService.getAllItems()
+      .then((items) => {
+        if (items.length > 0) {
+          res.render('items', { Items: items });
+        } else {
+          res.render('items', { message: 'No results' });
+        }
       })
-      .catch(function(error) {
-        res.render('items', { message: 'no results' });
+      .catch(() => {
+        res.render('items', { message: 'Error retrieving items' });
       });
   });
+  
+  app.get('/categories', function(req, res) {
+    storeService.getCategories()
+      .then((categories) => {
+        if (categories.length > 0) {
+          res.render('categories', { Categories: categories });
+        } else {
+          res.render('categories', { message: 'No results' });
+        }
+      })
+      .catch(() => {
+        res.render('categories', { message: 'Error retrieving categories' });
+      });
+  });
+  
   
   app.use((req,res)=>{
     res.status(404).send("Page does not exist, coming soon!!!");
 
   });
 
-  app.get("/items/add", function(req,res){
-    res.render("addItem");
-    })
+  app.get('/Items/add', function(req, res) {
+    storeService.getCategories()
+      .then((categories) => {
+        res.render('addPost', { categories: categories });
+      })
+      .catch(() => {
+        res.render('addPost', { categories: [] });
+      });
+  });
+  
 
  // app.listen(HTTP_PORT, onHTTPSTART);
  data.initialize().then(function(){
@@ -111,16 +136,7 @@ function onHTTPSTART() {
     processItem("");
   }
 })
-app.get('/categories', function(req, res) {
-  // Assuming you have a "getCategories" function that returns a promise
-  getCategories()
-    .then(function(data) {
-      res.render('categories', { categories: data });
-    })
-    .catch(function(error) {
-      res.render('categories', { message: 'no results' });
-    });
-});
+
 app.get("/shop", async (req, res) => {
   // Declare an object to store properties for the view
   let viewData = {};
@@ -210,6 +226,62 @@ app.get('/shop/:id', async (req, res) => {
       viewData.categoriesMessage = "no results"
   }
 
-  // render the "shop" view with all of the data (viewData)
+
   res.render("shop", {data: viewData})
 });
+app.use(express.urlencoded({ extended: true }));
+
+app.get('/categories/add', function(req, res) {
+  res.render('addCategory');
+});
+app.post('/categories/add', function(req, res) {
+  const categoryData = {
+    category: req.body.category
+  };
+
+  storeService.addCategory(categoryData)
+    .then(() => {
+      res.redirect('/categories');
+    })
+    .catch(() => {
+      res.status(500).send('Unable to create category');
+    });
+});
+
+
+app.get('/categories/delete/:id', function(req, res) {
+  const categoryId = req.params.id;
+
+  storeService.deleteCategoryById(categoryId)
+    .then(() => {
+      res.redirect('/categories');
+    })
+    .catch(() => {
+      res.status(500).send('Unable to remove category / Category not found');
+    });
+});
+
+
+app.get('/items/delete/:id', function(req, res) {
+  const itemId = req.params.id;
+
+  storeService.deletePostById(itemId)
+    .then(() => {
+      res.redirect('/items');
+    })
+    .catch(() => {
+      res.status(500).send('Unable to remove item / Item not found');
+    });
+});
+app.get('/Items/delete/:id', function(req, res) {
+  const postId = req.params.id;
+
+  storeService.deletePostById(postId)
+    .then(() => {
+      res.redirect('/Items');
+    })
+    .catch(() => {
+      res.status(500).send('Unable to remove post / Post not found');
+    });
+});
+

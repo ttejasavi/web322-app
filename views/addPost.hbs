@@ -1,0 +1,10 @@
+<select class="form-control" name="category" id="category">
+  <option value="">Select Category</option>
+  {{#if categories}}
+    {{#each categories}}
+      <option value="{{id}}">{{category}}</option>
+    {{/each}}
+  {{else}}
+    <option disabled>No Categories</option>
+  {{/if}}
+</select>

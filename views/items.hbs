@@ -1,42 +1,60 @@
-<div class="row">
-    <div class="col-md-12">
-          
-          <div class="col-md-12">
-  <div class="table-responsive">
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Item ID</th>
-          <th>Title</th>
-          <th>Post Date</th>
-          <th>Price</th>
-          <th>Category</th>
-          <th>Published</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{#each items}}
-          <tr>
-            <td>{{id}}</td>
-            <td>{{title}}</td>
-            <td>{{postDate}}</td>
-            <td>{{price}}</td>
-            <td>
-              <a href="/items?category={{categoryId}}">
-                {{categoryName}}
-              </a>
-            </td>
-            <td>{{published}}</td>
-          </tr>
-        {{/each}}
-      </tbody>
-    </table>
-  </div>
-</div>
+<a href="/items/add" class="btn btn-success pull-right">Add Post</a>
+<h2>Items</h2>
+<a href="/items/add" class="btn btn-success pull-right">Add Post</a>
 
+{{#if Items}}
+ <div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Item ID</th>
+                        <th>Title</th>
+                        <th>Post Date</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                        <th>Published</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each items}}
+                        <tr>
+                            <td>{{id}}</td>
+                            <td>{{title}}</td>
+                            <td>{{postDate}}</td>
+                            <td>{{price}}</td>
+                            <td><a href="/items?category={{category}}">{{category}}</a></td>
+                            <td>{{published}}</td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <div class="col-md-12 text-center">
-  <strong>{{#unless items.length}}{{message}}{{/unless}}</strong>
-</div>
+    <strong>{{message}}</strong>
+</div> 
+<table class="table">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <!-- Add the new column for the remove links -->
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each Items}}
+    <tr>
+      <td>{{this.title}}</td>
+      
+      <td><a href="/Items/delete/{{this.id}}" class="btn btn-danger">remove</a></td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
 
+{{else}}
+  <p>{{message}}</p>
+{{/if}}

@@ -18,12 +18,37 @@ const streamifier = require('streamifier');
 const exphbs = require('express-handlebars');
 const handlebarsHelpers = require('./handlebars-helpers');
 const itemData = require("./store-service");
+const express = require('express');
+const app = express();
+const authData = require('./auth-service');
+const clientSessions = require('client-sessions');
 
-var app = express();
+authData.initialize()
+  .then(() => {
+    app.listen(3000, () => {
+      console.log('Server is running on http://localhost:3000');
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+  const storeData = require('./store-service');
+  const authData = require('./auth-service');
+  
+  storeData.initialize()
+    .then(authData.initialize)
+    .then(function () {
+      app.listen(HTTP_PORT, function () {
+        console.log('app listening on: ' + HTTP_PORT);
+      });
+    })
+    .catch(function (err) {
+      console.log('unable to start server: ' + err);
+    });
+
 
 var HTTP_PORT = process.env.PORT || 8080;
-// call this function after the http server starts listening for requests
-// Set up view engine
+
 
 app.engine('hbs', exphbs.engine({ extname: '.hbs' }));
 app.set('view engine', 'hbs');
@@ -39,6 +64,26 @@ function onHTTPSTART() {
     app.locals.viewingCategory = req.query.category;
     next();
 });
+app.use(clientSessions({
+  cookieName: 'session',
+  secret: 'week10example_web322', 
+  duration: 2 * 60 * 1000, 
+  activeDuration:  60 * 1000, 
+}));
+app.use(function (req, res, next) {
+  res.locals.session = req.session;
+  next();
+});
+function ensureLogin(req, res, next) {
+  if (!req.session.userName) {
+    res.redirect('/login');
+  } else {
+    next();
+  }
+}
+
+app.use(['/items', '/categories', '/post', '/category'], ensureLogin);
+
 
   
   app.get("/about", function(req,res){
@@ -283,5 +328,47 @@ app.get('/Items/delete/:id', function(req, res) {
     .catch(() => {
       res.status(500).send('Unable to remove post / Post not found');
     });
+});
+app.get('/login', function (req, res) {
+  res.render('login');
+});
+
+app.get('/register', function (req, res) {
+  res.render('register');
+});
+
+app.post('/register', function (req, res) {
+  authData.registerUser(req.body)
+    .then(() => {
+      res.render('register', { successMessage: 'User created' });
+    })
+    .catch((err) => {
+      res.render('register', { errorMessage: err, userName: req.body.userName });
+    });
+});
+
+app.post('/login', function (req, res) {
+  req.body.userAgent = req.get('User-Agent');
+  authData.checkUser(req.body)
+    .then((user) => {
+      req.session.user = {
+        userName: user.userName,
+        email: user.email,
+        loginHistory: user.loginHistory,
+      };
+      res.redirect('/items');
+    })
+    .catch((err) => {
+      res.render('login', { errorMessage: err, userName: req.body.userName });
+    });
+});
+
+app.get('/logout', function (req, res) {
+  req.session.reset();
+  res.redirect('/');
+});
+
+app.get('/userHistory', ensureLogin, function (req, res) {
+  res.render('userHistory');
 });
 
